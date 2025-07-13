@@ -1,0 +1,8 @@
+{
+  "name": "GTON Token",
+  "description": "Der zentrale Token des @RFOF-NETWORK, entworfen als 'Rescuer Layer' für eine nachhaltige digitale Zukunft auf der TON Blockchain.",
+  "symbol": "GTON",
+  "decimals": 9,
+  "image": "https://deine-domain.com/gton-logo-256.png",
+  "image_data": "base64-kodierte-bild-daten-optional"
+}
