@@ -1,0 +1,2 @@
+# -GTON-tg-Block-RFOF-BOx-to-BOx-chain-extention-RFOF-NETWORK
+@ROF-NETWORK &amp; URU Foundation (UnifiedRescuerUnion) created the $GTON token to produce a self-made business method for every TON G's ($GTON) life's decentralized and near by the QCH-L-C dev &amp;/or the user community as investement system for the crowd of the Unified Rescuer-Layer for building the @RFOF-NETWORK &amp; URU Foundation (UnifiedRescuerUnion)
