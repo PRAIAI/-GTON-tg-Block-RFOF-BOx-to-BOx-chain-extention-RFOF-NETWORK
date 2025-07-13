@@ -1,0 +1,26 @@
+import { Config } from '@ton-community/blueprint';
+
+export const config: Config = {
+    projects: {
+        'main': {
+            path: 'contracts/',
+            compiler: {
+                version: 'latest', // Oder eine spezifische Version wie '0.1.1'
+                tact: {
+                    entrypoints: [
+                        'proxy.tact',
+                        'jetton-minter.tact',
+                        'jetton-wallet.tact',
+                        'staking.tact'
+                    ]
+                }
+            },
+            wrappers: {
+                path: 'wrappers/',
+            },
+            tests: {
+                path: 'tests/',
+            }
+        }
+    }
+};
