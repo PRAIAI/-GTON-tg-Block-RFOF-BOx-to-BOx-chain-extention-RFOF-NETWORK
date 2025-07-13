@@ -1,0 +1,36 @@
+{
+  "name": "gton-token-network",
+  "version": "1.0.0",
+  "description": "Smart Contracts for the $GTON Token and the @RFOF-NETWORK on the TON Blockchain.",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx blueprint run",
+    "build": "npx blueprint build",
+    "test": "npx blueprint test"
+  },
+  "keywords": [
+    "ton",
+    "tact",
+    "jetton",
+    "smart-contract",
+    "gton",
+    "rfof-network"
+  ],
+  "author": "@RFOF-NETWORK",
+  "license": "MIT",
+  "devDependencies": {
+    "@ton-community/blueprint": "^0.14.0",
+    "@ton-community/sandbox": "^0.11.0",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.12.8",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@ton/core": "^0.56.3",
+    "@ton/crypto": "^3.2.0",
+    "@ton/ton": "^6.0.0"
+  }
+}
