@@ -1,0 +1,53 @@
+import "@stdlib/deploy";
+import "./rfof_config.tact"; // Importiert Ihre zentrale Konfigurations-Datei
+
+// tgBTC - Ein pre-rTON Jetton und ELTT-Vorgänger
+// Geregelt durch das PRAIAI Anti-Virus-Axiom
+message(TokenTransfer) {
+    queryId: Int as uint64;
+    amount: Int as uint256;
+    destination: Address;
+    response_destination: Address?;
+    custom_payload: Cell?;
+    forward_ton_amount: Int as uint256;
+    forward_payload: Cell?;
+}
+
+contract tgBTC with Deployable {
+    owner: Address;
+    totalSupply: Int as uint256;
+    
+    // Platzhalter für PRAIAI-Status-Variablen
+    // z.B. um den Status der Mainnet-Testnet-Kopplung zu speichern
+    testnet_verified: Bool;
+
+    init() {
+        self.owner = sender();
+        self.totalSupply = 0; // oder ein initialer Wert
+        self.testnet_verified = false;
+    }
+
+    // Empfängt interne Nachrichten (z.B. für Minting oder andere Befehle)
+    receive(msg: TokenTransfer) {
+        let (mainnet_wallet, _, _, _, _) = get_rfof_config();
+
+        // =================================================================
+        // ### PRAIAI SICHERHEITSLOGIK HIER EINFÜGEN ###
+        // Bevor irgendeine Aktion ausgeführt wird, muss hier die Logik hin,
+        // die Ihre Regeln (z.B. Testnet-Verifizierung) überprüft.
+        if (context().sender == mainnet_wallet) {
+            require(self.testnet_verified, "PRAIAI-Fehler: Aktion nicht im Testnet verifiziert!");
+        }
+        // =================================================================
+
+        // Führen Sie die eigentliche Logik des Token-Transfers aus...
+        
+        // Setzen Sie den Status nach der Aktion zurück
+        self.testnet_verified = false;
+    }
+    
+    // Getter-Funktion, um den totalSupply abzufragen
+    get fun totalSupply(): Int {
+        return self.totalSupply;
+    }
+}
