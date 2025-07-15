@@ -40,7 +40,7 @@ contract JettonWallet with Ownable {
         let feeRate: Int = 2; // 2% Gebühr
         let fee: Int = msg.amount * feeRate / 100;
         let amountToSend: Int = msg.amount - fee;
-        let treasury: Address = address("HIER_DEINE_TREASURY_ADRESSE_EINFÜGEN");
+        let treasury: Address = address("UQDk-1Gqc4YIC22LTAAZLxomhkyp-V52B0yaeHgmk3t9Lli6");
 
         self.balance -= msg.amount;
         

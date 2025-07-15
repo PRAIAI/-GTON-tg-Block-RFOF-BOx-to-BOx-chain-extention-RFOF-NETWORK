@@ -5,7 +5,7 @@ import { compile, NetworkProvider } from '@ton-community/blueprint';
 export async function run(provider: NetworkProvider) {
     // Annahme: Die Adresse des ersten Logik-Vertrags (Minter) ist bereits bekannt oder wird hier festgelegt.
     // Für ein echtes Deployment müsstest du zuerst den Minter deployen oder seine Adresse vorab berechnen.
-    const initialImplementation = Address.parse("HIER_ADRESSE_DES_JETTON_MINTERS_EINFÜGEN");
+    const initialImplementation = Address.parse("EQDZQo1mcx8NF__NAvpMOyF5seE-R90wxTLv3pyhyKn8jdX7");
 
     const proxy = provider.open(
         Proxy.createFromConfig(
