@@ -5,7 +5,7 @@ import { Proxy } from '../wrappers/Proxy'; // Importiere den Proxy-Wrapper
 
 export async function run(provider: NetworkProvider) {
     const content = beginCell()
-        .storeStringTail('https://IHRE_DOMAIN.com/jetton-metadata.json')
+        .storeStringTail('https://dns.tonkeeper.com/manage?v=0:b252a6f274515998ccb587a049f579b7ea74a09609574ff5f671b7ee8b734530')
         .endCell();
 
     const minter = provider.open(
