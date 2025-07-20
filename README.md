@@ -94,7 +94,7 @@ npx blueprint run
  * Whitepaper: [LINK_ZU_DEINEM_WHITEPAPER]
 ⚠️ Disclaimer
 Die Nutzung der hier bereitgestellten Smart Contracts erfolgt auf eigenes Risiko. Obwohl der Code nach bestem Wissen und Gewissen entwickelt und getestet wurde, können in Smart Contracts immer unvorhergesehene Risiken und Bugs auftreten. Führe immer deine eigene Recherche durch (DYOR).
-``
+````
 GTON-TOKEN-REPOSITORY/
 ├── contracts/
 │   ├── jetton-minter.tact
@@ -130,5 +130,5 @@ GTON-TOKEN-REPOSITORY/
 ├── package-lock.json          # (Sperrt die Versionen der Abhängigkeiten)
 ├── package.json               # (Definiert das Projekt, Skripte und Abhängigkeiten)
 └── README.md                  # (Die Hauptdokumentation deines Projekts)
-``
+````
 
