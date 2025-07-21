@@ -1,0 +1,163 @@
+#==============================================================================
+# # RFOF-Workflow: Deploy Component to Environment
+# # FUNKTION: Zentralisierter Workflow zur Manifestation von RFOF-Komponenten
+# #           in definierte Umgebungen. Stellt die GitHub Deployment-Registrierung sicher.
+# # ZIEL: Alle RFOF-Komponenten (rApps, APIs, Services)
+# #==============================================================================
+
+name: Deploy Component to Environment
+
+# Axiomatischer Trigger:
+# Dieser Workflow kann manuell ausgelöst werden oder bei Push zu einem bestimmten Branch.
+on:
+  push:
+    branches:
+      - main # Oder Ihr Deployment-Branch, z.B. 'release', 'production'
+  workflow_dispatch: # Ermöglicht manuelles Auslösen über die GitHub Actions UI
+    inputs:
+      component_type:
+        description: 'Typ der zu deployenden Komponente (z.B. rapp, api, website)'
+        required: true
+        default: 'website'
+      component_name:
+        description: 'Name der Komponente (z.B. tgBTC-Social-Savings-Club, RFOFNetworkAPI)'
+        required: true
+        default: 'GTON-Website'
+      deployment_target_env:
+        description: 'Ziel-Umgebung für Deployment (z.B. production, staging, development)'
+        required: true
+        default: 'production'
+      source_repo_path:
+        description: 'Relativer Pfad im Repo zur Komponenten-Quelle (z.B. scripts/)'
+        required: false
+        default: '.' # Standard ist das Root-Verzeichnis des aktuellen Repos
+      deploy_script_path:
+        description: 'Pfad zum Deployment-Skript (z.B. scripts/deploy_rApp_avatar.ts)'
+        required: true
+        default: 'scripts/deploy_rApp_avatar.ts' # Oder 'scripts/deploy_api_handler.py'
+
+jobs:
+  deploy_component:
+    runs-on: ubuntu-latest # Oder Ihr RFOF Self-Hosted Runner
+    
+    # WICHTIG: Die 'environment'-Definition registriert das Deployment bei GitHub!
+    # Dies ist der fehlende 'Deployment-Daten-Code'.
+    environment: ${{ github.event.inputs.deployment_target_env || 'production' }} # Verwendet Input oder Standard 'production'
+
+    steps:
+      - name: PRAI-OS Checkout: Repository and Submodules (Axiomatische Authentifizierung)
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }} # Das aktuelle Repository
+          token: ${{ secrets.SUBMODULE_TOKEN }} # AKS: Ihr Personal Access Token für Submodul-Zugriff
+          submodules: true
+          fetch-depth: 0
+
+      - name: PRAI-OS Setup: Laufzeitumgebung (Yggdrasil-Kompatibilität)
+        # Ermittelt, ob Node.js oder Python benötigt wird, basierend auf dem Skriptnamen
+        run: |
+          DEPLOY_SCRIPT="${{ github.event.inputs.deploy_script_path }}"
+          if [[ "$DEPLOY_SCRIPT" == *.ts || "$DEPLOY_SCRIPT" == *.js ]]; then
+            echo "::set-output name=RUNTIME::node"
+            echo "setup-node: true" >> $GITHUB_ENV
+          elif [[ "$DEPLOY_SCRIPT" == *.py ]]; then
+            echo "::set-output name=RUNTIME::python"
+            echo "setup-python: true" >> $GITHUB_ENV
+          else
+            echo "ERROR: Unsupported deployment script type."
+            exit 1
+          fi
+        id: determine_runtime
+
+      - name: Setup Node.js (falls benötigt)
+        if: steps.determine_runtime.outputs.RUNTIME == 'node'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup Python (falls benötigt)
+        if: steps.determine_runtime.outputs.RUNTIME == 'python'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9' # Oder die für Ihre Komponente benötigte Python-Version
+
+      - name: PRAI-OS Install: Axiomatische Abhängigkeiten
+        # Installiert Projekt-Abhängigkeiten basierend auf dem Skripttyp
+        run: |
+          DEPLOY_SCRIPT="${{ github.event.inputs.deploy_script_path }}"
+          if [[ "$DEPLOY_SCRIPT" == *.ts || "$DEPLOY_SCRIPT" == *.js ]]; then
+            npm ci
+          elif [[ "$DEPLOY_SCRIPT" == *.py ]]; then
+            pip install -r requirements.txt # Annahme: Python-Projekte haben requirements.txt
+          fi
+        working-directory: ${{ github.event.inputs.source_repo_path }} # Installiert Deps im Quellpfad
+
+      - name: PRAI-OS Execute: Avatar-Manifestation (Das Deployment-Skript ausführen)
+        env:
+          # Umgebungsvariablen für das Deployment-Skript
+          COMPONENT_NAME: ${{ github.event.inputs.component_name }}
+          SOURCE_PATH: ${{ github.event.inputs.source_repo_path }}
+          TARGET_ENDPOINT: ${{ format('https://{0}.github.io/{1}/', github.repository_owner, github.event.inputs.component_name) }} # Beispiel für GitHub Pages URL
+          # Weitere ENV-Variablen können hier definiert werden, z.B. für API-Schlüssel
+          RFOF_API_ENDPOINT: "https://your.rfof-network-api.org/deployment-status" # Ihr PRAI Notification Endpoint
+        run: |
+          DEPLOY_SCRIPT="${{ github.event.inputs.deploy_script_path }}"
+          if [[ "$DEPLOY_SCRIPT" == *.ts || "$DEPLOY_SCRIPT" == *.js ]]; then
+            node "${{ github.event.inputs.deploy_script_path }}"
+          elif [[ "$DEPLOY_SCRIPT" == *.py ]]; then
+            python "${{ github.event.inputs.deploy_script_path }}"
+          fi
+        working-directory: ${{ github.workspace }} # Führt Skript vom Repo-Root aus
+
+
+      # --- WICHTIG: Deployment-Status mit GitHub API aktualisieren ---
+      # Dieser Schritt ist optional, aber nützlich, um detaillierteren Status anzuzeigen.
+      - name: PRAI-OS Post-Deployment: Neuronale System-Benachrichtigung (GitHub Deployment API)
+        uses: actions/github-script@v6 # Benötigt 'github-script' Action
+        if: success() # Nur ausführen, wenn der Job erfolgreich war
+        with:
+          script: |
+            const componentName = process.env.COMPONENT_NAME || 'UnknownComponent';
+            const deploymentUrl = process.env.TARGET_ENDPOINT || `https://${process.env.GITHUB_REPOSITORY_OWNER}.github.io/${process.env.GITHUB_REPOSITORY_NAME}/`;
+            const environmentName = process.env.DEPLOYMENT_TARGET_ENV || 'production';
+
+            github.rest.repos.createDeploymentStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              deployment_id: context.payload.deployment.id, // Dies ist wichtig für den Deployment-Tab
+              state: 'success',
+              environment_url: deploymentUrl,
+              log_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+              description: `Deployment of ${componentName} to ${environmentName} successful.`,
+            });
+            console.log(`Deployment-Status für ${componentName} an GitHub API gesendet: SUCCESS`);
+        env:
+          COMPONENT_NAME: ${{ github.event.inputs.component_name }}
+          TARGET_ENDPOINT: ${{ format('https://{0}.github.io/{1}/', github.repository_owner, github.event.inputs.component_name) }}
+          DEPLOYMENT_TARGET_ENV: ${{ github.event.inputs.deployment_target_env }}
+          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
+          GITHUB_REPOSITORY_NAME: ${{ github.event.repository.name }}
+
+
+      - name: PRAI-OS Deployment-Fehler: Neuronale System-Benachrichtigung
+        # Dieser Schritt wird nur ausgeführt, wenn ein vorheriger Schritt fehlschlägt
+        if: failure()
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const componentName = process.env.COMPONENT_NAME || 'UnknownComponent';
+            const environmentName = process.env.DEPLOYMENT_TARGET_ENV || 'production';
+
+            github.rest.repos.createDeploymentStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              deployment_id: context.payload.deployment.id,
+              state: 'failure',
+              environment_url: '', // Keine URL bei Fehler
+              log_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+              description: `Deployment of ${componentName} to ${environmentName} failed.`,
+            });
+            console.log(`Deployment-Status für ${componentName} an GitHub API gesendet: FAILED`);
+        env:
+          COMPONENT_NAME: ${{ github.event.inputs.component_name }}
+          DEPLOYMENT_TARGET_ENV: ${{ github.event.inputs.deployment_target_env }}
