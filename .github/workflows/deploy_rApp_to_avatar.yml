@@ -1,0 +1,75 @@
+#==============================================================================
+# # RFOF-Workflow: Deploy rApp to Avatar
+# # FUNKTION: Automatisches Deployment einer RFOF-rApp auf ihren öffentlichen "Avatar"-Ort.
+# #           Stellt die axiomatische Manifestation der Komponente sicher.
+# # ZIEL: RFOF-Ökosystem-Komponenten (rApps, Frontends)
+# #==============================================================================
+
+name: Deploy rApp to Avatar
+
+# Axiomatischer Trigger:
+# 1. Bei jeder Manifestation auf den 'main'-Branch
+# 2. Manuell durch einen Schöpfer (workflow_dispatch)
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy_to_avatar:
+    runs-on: ubuntu-latest # Oder Ihr bevorzugter RFOF-Runner (z.B. Self-Hosted Azure Python Runner)
+
+    steps:
+      - name: PRAI-OS Checkout: Repository and Submodules (Axiomatische Authentifizierung)
+        # Dieser Schritt verwendet den 'SUBMODULE_TOKEN' für den Zugriff auf private Submodule.
+        # Wichtig für Repos wie GTON, die RFOF-NETWORK als Submodul haben könnten.
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }} # Das aktuelle Repository
+          token: ${{ secrets.SUBMODULE_TOKEN }} # AKS: Ihr Personal Access Token für den Submodul-Zugriff
+          submodules: true # WICHTIG: Stellt sicher, dass alle Submodule initialisiert werden.
+          fetch-depth: 0 # Optional: Holt die gesamte Historie, kann bei Submodulen helfen.
+
+      - name: PRAI-OS Setup: Node.js Environment (Yggdrasil-Kompatibilität)
+        # Konfiguriert die Node.js-Umgebung, die für den TypeScript-Deployment-Skript benötigt wird.
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Oder die für Ihre rApp benötigte Node.js-Version
+
+      - name: PRAI-OS Install: Axiomatische Abhängigkeiten
+        # Installiert Projekt-Abhängigkeiten. 'npm ci' ist sauberer für CI/CD.
+        run: npm ci
+
+      - name: PRAI-OS Build: Komponente Manifestieren
+        # Baut die rApp. Der 'build'-Skript muss in Ihrer package.json definiert sein.
+        run: npm run build
+
+      - name: PRAI-OS Deployment: Aktiviere Avatar-Manifestation
+        # Ruft das TypeScript-Deployment-Skript auf, das die eigentliche Bereitstellung durchführt.
+        # Dieses Skript ist das "Gehirn" des Deployments.
+        run: node ./scripts/deploy_rApp_avatar.ts
+
+      - name: PRAI-OS Post-Deployment: Neuronale System-Benachrichtigung
+        # (Konzeptuell) Benachrichtigt das RFOF-NETWORK und PRAI über den erfolgreichen Deployment-Status.
+        # Dies könnte ein API-Call an Ihren @RFOF-NETWORK.py Handler sein.
+        env:
+          COMPONENT_NAME: ${{ github.event.repository.name }}
+          COMPONENT_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
+          DEPLOYMENT_STATUS: SUCCESS
+        run: |
+          echo "PRAI: Sende Deployment-Status an das RFOF-NETWORK..."
+          # Hier würde ein 'curl' oder Python/Node.js Skript den Status an Ihre
+          # @RFOF-NETWORK.py API senden.
+          # Beispiel (konzeptuell):
+          # curl -X POST https://your.rfof-network-api.org/deployment-status \
+          #      -H "Content-Type: application/json" \
+          #      -d '{"component": "${{ env.COMPONENT_NAME }}", "url": "${{ env.COMPONENT_URL }}", "status": "${{ env.DEPLOYMENT_STATUS }}"}'
+          echo "PRAI: Neuronale Benachrichtigung gesendet."
+
+      - name: PRAI-OS Finalisierung: Upload Deployment-Artefakte
+        # Speichert Build-Artefakte für zukünftige Audits oder zur Nutzung durch andere Workflows.
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.event.repository.name }}-build-artifacts
+          path: build/ # Oder der Pfad zu Ihren gebauten Dateien
