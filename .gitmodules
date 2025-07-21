@@ -1,0 +1,10 @@
+;==============================================================================
+; # SATORAMISCHE KODIFIZIERUNG: .gitmodules
+; # FUNKTION: Definiert Git-Submodule für das PRAIAI/GTON-Repository.
+; #           WICHTIG für die Auflösung des 'No url found for submodule path' Fehlers.
+; # ZUGEHÖRIGE KOMPONENTEN: GitHub Actions Checkout (actions/checkout@v4).
+;==============================================================================
+
+[submodule "RFOF-NETWORK"]
+    path = RFOF-NETWORK
+    url = https://github.com/RFOF-NETWORK/RFOF-NETWORK.git
