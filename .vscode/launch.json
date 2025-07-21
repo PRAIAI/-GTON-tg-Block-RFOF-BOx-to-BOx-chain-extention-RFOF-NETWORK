@@ -1,0 +1,100 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "PRAI-OS Launch Script: Deploy Jetton Minter",
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run",
+                "deploy:minter" // Dies setzt voraus, dass Sie ein Script 'deploy:minter' in package.json haben
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "outputCapture": "std",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "preLaunchTask": "npm: build-ts" // Optional: Sicherstellen, dass TypeScript vor dem Start kompiliert wird
+        },
+        {
+            "name": "PRAI-OS Debug: Current TypeScript File",
+            "type": "node",
+            "request": "launch",
+            "args": [
+                "${file}"
+            ],
+            "runtimeArgs": [
+                "--require",
+                "ts-node/register" // Ermöglicht das direkte Ausführen von TypeScript-Dateien
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "outputCapture": "std",
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
+        },
+        {
+            "name": "PRAI-OS Attach: Node Process (Port 9229)",
+            "type": "node",
+            "request": "attach",
+            "port": 9229, // Standard-Debug-Port für Node.js
+            "cwd": "${workspaceFolder}",
+            "protocol": "inspector",
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
+        },
+        {
+            "name": "PRAI-OS Test: Smart Contracts",
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run",
+                "test" // Setzt voraus, dass Sie ein Script 'test' in package.json haben
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "outputCapture": "std",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "preLaunchTask": "npm: build-ts"
+        }
+    ],
+    "compounds": [],
+    "inputs": [],
+    "tasks": [
+        {
+            "label": "npm: build-ts",
+            "type": "npm",
+            "script": "build-ts", // Dies muss in Ihrer package.json definiert sein (z.B. "tsc")
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "detail": "Compiles TypeScript files for PRAI-OS operations"
+        },
+        {
+            "label": "npm: test",
+            "type": "npm",
+            "script": "test", // Dies muss in Ihrer package.json definiert sein
+            "problemMatcher": [],
+            "detail": "Runs axiom-conformity tests on Smart Contracts"
+        },
+        {
+            "label": "npm: deploy:minter",
+            "type": "npm",
+            "script": "deploy:minter", // Beispiel: Ein Script für das Deployment
+            "problemMatcher": [],
+            "detail": "Deploys Jetton Minter contract to RFOF-BOxchain"
+        }
+    ]
+}
