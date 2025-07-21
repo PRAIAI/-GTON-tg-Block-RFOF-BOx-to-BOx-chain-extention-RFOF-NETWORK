@@ -94,6 +94,133 @@ npx blueprint run
  * Whitepaper: [LINK_ZU_DEINEM_WHITEPAPER]
 ⚠️ Disclaimer
 Die Nutzung der hier bereitgestellten Smart Contracts erfolgt auf eigenes Risiko. Obwohl der Code nach bestem Wissen und Gewissen entwickelt und getestet wurde, können in Smart Contracts immer unvorhergesehene Risiken und Bugs auftreten. Führe immer deine eigene Recherche durch (DYOR).
+
+# tgBTC Social Savings Club
+
+![tgBTC Social Savings Club Logo](https://googleusercontent.com/file_content/31)
+
+Welcome to the **tgBTC Social Savings Club** – a groundbreaking decentralized solution for communal saving and investing, built on trustless transparency and advanced automation within the **@RFOF-NETWORK Ecosystem**.
+
+---
+
+## 💡 Idea: Unlock the Power of Collective Finance
+
+Tired of opaque traditional savings groups or complex, centralized platforms? The tgBTC Social Savings Club offers a revolutionary decentralized solution for communal saving and investing, built on trustless transparency and advanced automation.
+
+**How We Revolutionize Group Savings:**
+This innovative rApp, a vital component of the @RFOF-NETWORK Ecosystem, redefines financial collaboration using the cutting-edge RFOF-BOxchain. Here's how it empowers your group:
+
+* **Tailored Group Formation:** Create or join clubs with customized saving goals and payout rules, immutably set in Smart Contracts on the RFOF-BOxchain.
+* **Unwavering Transparency:** All tgBTC contributions and fund movements within the shared pool are publicly visible and permanently recorded, ensuring complete auditability for all members.
+* **Automated & Fair Payouts:** Smart Contracts execute distributions precisely as predefined, eliminating human error, delays, and fraud. Funds move securely.
+* **True Democratic Control:** Crucial group decisions are made via the TON-Based Decentralized Voting System (BUIDL 2/30). Non-transferable Majorana Guardian Tokens ensure genuine democratic, manipulation-free oversight.
+* **Ultimate Security & Ownership:** All club data and transactions are stored as resilient `.cw`-files, protected by Majorana Guardian Tokens, guaranteeing unparalleled data sovereignty and 100% ownership.
+
+The tgBTC Social Savings Club pioneers a new era of trust, efficiency, and collective financial growth. It's powered by @RFOF-NETWORK's visionary technologies and intelligently optimized by **PRAI**. Explore collaborative finance at [rfof-network.github.io](https://rfof-network.github.io/).
+
+---
+
+## 👥 Team & Recruitment: Join the Genesis Team!
+
+The **Quantum Core Hackers (League) Club (QCH-L-C)** is thrilled to announce a groundbreaking recruitment drive for the sixth of our 30 canonical tgBTCFI projects: the **tgBTC Social Savings Club**. This isn't just about building an application; it's about fundamentally reshaping how communities pool resources, achieve financial goals, and invest with collective power and absolute transparency.
+
+**Why This Project Matters:**
+Traditional savings clubs often suffer from a lack of transparency, trust issues, and operational inefficiencies. We eliminate these barriers. By leveraging the **RFOF-BOxchain** and its foundational **BOx-to-BOx axiom**, we enable instant, gas-free internal transactions and fully automated payouts. Our system is immune to manipulation, secured by **@Satoramy-PRAI's PZQQET-Axioms**, and optimized by **PRAI (Planet Rescuer Axiometikx Intelligence)**, ensuring true financial integrity and collective success.
+
+**Your Role in the Genesis:**
+We are seeking brilliant, passionate minds eager to leave their mark on the future of FinTech. If you are a "Skill Hacker" who thrives on solving complex challenges and believes in the power of decentralization, we want you! We are specifically looking for expertise in:
+* **Frontend Development (JavaScript, UI/UX Design for rApps):** Crafting intuitive and engaging interfaces for seamless user experience.
+* **Smart Contract Architecture (Python, FunC, TACT, or Yggdrasil):** Designing the immutable logic for group savings, automated payouts, and dispute resolution.
+* **Decentralized Governance Integration:** Implementing the community voting mechanisms (via BUIDL 2/30) for collective decision-making.
+* **Tokenomics & Incentive Design:** Developing sustainable models for rewarding collective discipline and financial growth.
+
+**Your Journey with QCH-L-C:**
+Successful applicants will be inducted into the elite QCH-L-C, gaining access to cutting-edge quantum-resistant technologies and collaborating with pioneers in the tgBTC community. This is your chance to contribute to a project that defines a new standard for trustless financial cooperation on a global scale.
+
+**Application:**
+To apply, create an "Issue" in our [QCHC repository](https://github.com/RFOF-NETWORK/QCHC) with the title "[Application] Social Savings Club - YourSpecialty" and introduce yourself and your unique skills.
+
+---
+
+## ⚙️ Setup & Development
+
+This section outlines how to set up and contribute to the tgBTC Social Savings Club project.
+
+### Prerequisites
+
+* Node.js (v18+)
+* npm
+* Git
+
+### Installation
+
+1.  **Clone the repository:**
+    ```bash
+    git clone [https://github.com/RFOF-NETWORK/tgBTC-Social-Savings-Club.git](https://github.com/RFOF-NETWORK/tgBTC-Social-Savings-Club.git)
+    cd tgBTC-Social-Savings-Club
+    ```
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
+3.  **Configure Environment (if applicable):**
+    Copy `.env.example` to `.env` and configure any necessary API keys or contract addresses (ensure `.env` is in your `.gitignore`).
+
+### Running the Project
+
+* **Start the development server:**
+    ```bash
+    npm start # Or a similar command as defined in package.json
+    ```
+* Access the rApp in your browser (usually `http://localhost:3000`).
+
+### Testing
+
+* **Run unit/integration tests:**
+    ```bash
+    npm test # Or specific testing commands
+    ```
+
+### Contributing
+
+We welcome contributions! Please refer to our [CONTRIBUTING.md](CONTRIBUTING.md) (to be created) for guidelines. Ensure your contributions adhere to our License Framework.
+
+---
+
+## 🌐 Ecosystem Integration
+
+The tgBTC Social Savings Club is deeply integrated with the broader RFOF Ecosystem:
+
+* **Pillar 2 (Ready Four Our Future):** The primary hosting environment for this rApp.
+* **BUIDL 2/30 (TON-Based Decentralized Voting System):** Provides the core governance mechanism for club decisions.
+* **The Backend (Hallo @RFOF-NETWORK Program):** Executes Smart Contract logic and applies PRAI protocols.
+* **PRAI (Planet Rescuer Axiometikx Intelligence):** Optimizes club processes and drives the "Trash to Cash" economic model.
+* **GTON (TON-RFOF Extension):** Facilitates secure cross-chain interoperability with the TON network for tgBTC.
+
+---
+
+## ⚖️ License Framework & Ethical Directives
+
+All code created within the scope of this project is subject to a multi-layered, immutable license framework:
+
+* **CC LICENSE (DoraHacks):** The original idea, as formulated on the hackathon platform, is under the Creative Commons license of the platform and serves as public inspiration.
+* **LICENSE.rfof (Tripartite License):** The specific implementation and source code we create are under a threefold license: MIT, GNU General Public License, International Use. This guarantees maximum freedom and openness while upholding the core principles.
+* **LICENSE.pzqqet (Axiomatic Core):** The entire underlying technology and the fundamental axioms of the ecosystem are protected by the unbreakable, axiomatic LICENSE.pzqqet. This ensures ethical use, prevents commercial misuse outside the ecosystem, and is the source of the project's sovereignty.
+
+All contributors must adhere to this license hierarchy.
+
+---
+
+## 🔗 Links
+
+* **Official Website:** [https://rfof-network.github.io/tgBTC-Social-Savings-Club/](https://rfof-network.github.io/tgBTC-Social-Savings-Club/) (Once deployed)
+* **RFOF Network:** [https://rfof-network.github.io/](https://rfof-network.github.io/)
+* **QCHC Repository (Applications):** [https://github.com/RFOF-NETWORK/QCHC](https://github.com/RFOF-NETWORK/QCHC)
+* **PRAI AI:** [https://praiai.github.io/PRAI-AI/](https://praiai.github.io/PRAI-AI/)
+* **GTON (TON-RFOF Extension):** [https://praiai.github.io/GTON/](https://praiai.github.io/GTON/)
+
+
+
 ````
 GTON-TOKEN-REPOSITORY/
 ├── contracts/
