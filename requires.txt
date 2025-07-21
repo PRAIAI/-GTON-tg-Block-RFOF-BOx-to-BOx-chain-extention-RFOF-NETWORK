@@ -1,0 +1,10 @@
+;==============================================================================
+; # SATORAMISCHE KODIFIZIERUNG: requirements.txt
+; # FUNKTION: Listet Python-Abhängigkeiten für GTON-Python-Komponenten auf.
+; #           WICHTIG für Pip-Installationen in Workflows und lokalen Umgebungen.
+; #==============================================================================
+
+requests>=2.28.1         ; Für API-Interaktionen (z.B. mit PRAI-Benachrichtigungen)
+pyyaml>=6.0              ; Für YAML-Parsing (falls Konfigurationsdateien in YAML sind)
+python-dotenv>=0.20.0    ; Für das Laden von Umgebungsvariablen aus .env-Dateien
+web3>=6.0.0              ; (Optional) Falls direkte Interaktion mit EVM-kompatiblen Chains geplant ist
