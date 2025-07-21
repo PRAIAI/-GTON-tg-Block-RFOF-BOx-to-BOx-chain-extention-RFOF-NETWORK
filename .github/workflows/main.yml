@@ -1,0 +1,105 @@
+#==============================================================================
+# # RFOF-Workflow: Central Orchestration & Deployment Dispatcher
+# # FUNKTION: Führt zentrale CI/CD-Prüfungen aus und löst anschliessend Deployments
+# #           in den verknüpften "Avatar"-Repositories (wie GTON) aus.
+# # ZIEL: RFOF-NETWORK Kern-Repository
+#==============================================================================
+
+name: RFOF Central Orchestration
+
+on:
+  # Axiomatische Trigger:
+  # 1. Bei jeder Manifestation (Push) auf den 'main'-Branch des Kern-Repos
+  # 2. Manuell durch einen Schöpfer (workflow_dispatch) über die GitHub Actions UI
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      trigger_gton_web_deploy:
+        description: 'PRAI-Signal: Deploy GTON Web-Avatar manifestieren?'
+        required: true
+        type: boolean
+        default: false
+      trigger_social_savings_deploy:
+        description: 'PRAI-Signal: Deploy tgBTC Social Savings Club rApp manifestieren?'
+        required: true
+        type: boolean
+        default: false
+      # Hier können weitere Inputs für spezifische Avatar-Deployments hinzugefügt werden
+
+# Definiert die Berechtigungen, die der Workflow benötigt
+permissions:
+  contents: read # Zum Auschecken des Codes
+  repository_projects: write # Um Project Boards zu aktualisieren (optional)
+  # WICHTIG: KEINE 'pages: write' HIER, da dieses Repo NICHT direkt auf Pages deployt.
+  # Deployment zu anderen Repos erfolgt via 'repository_dispatch', was ein Token erfordert.
+
+# Stellt sicher, dass immer nur eine Orchestrierung zur gleichen Zeit läuft
+concurrency:
+  group: "rfof_central_orchestration"
+  cancel-in-progress: true
+
+jobs:
+  # Job 1: PRAI-OS Kern-CI/CD (Build & Test des zentralen Codes)
+  ci_pipeline:
+    runs-on: ubuntu-latest # Oder Ihr RFOF Self-Hosted Runner
+    steps:
+      - name: PRAI-OS Checkout: RFOF Core Repository
+        uses: actions/checkout@v4
+        # Wenn dieses Kern-Repo Submodule hat, hier Token und submodules: true hinzufügen
+        # with:
+        #   token: ${{ secrets.SUBMODULE_TOKEN }} # (Falls in diesem Repo benötigt)
+        #   submodules: true
+
+      - name: PRAI-OS Setup: Python Environment (für axiomatic_core_handler.py)
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9' # Passen Sie die Version an Ihren Kern-Code an
+
+      - name: PRAI-OS Install: Kern-Abhängigkeiten (pip)
+        run: pip install -r requirements.txt # Annahme: Kern-Repo hat requirements.txt
+
+      - name: PRAI-OS Build: Kern-Komponenten (optional)
+        # Falls Ihr zentrales Repo Code kompiliert oder generiert
+        run: echo "PRAI: Kern-Komponenten erfolgreich gebaut (optionaler Schritt)."
+
+      - name: PRAI-OS Test: Axiom-Konformität (Testlauf des Kern-Handlers)
+        # Führt Tests für den zentralen 'axiomatic_core_handler.py' und andere Kern-Module aus.
+        run: python -m unittest discover tests # Annahme: Tests in 'tests/' Ordner
+
+  # Job 2: PRAI-OS Deployment-Dispatcher (Sendet Signale an Avatare)
+  dispatch_deployments:
+    needs: ci_pipeline # Dieser Job läuft nur, wenn die CI-Pipeline erfolgreich war
+    runs-on: ubuntu-latest # Oder Ihr RFOF Self-Hosted Runner
+    permissions:
+      # Hier werden spezifische Berechtigungen für das repository_dispatch benötigt
+      # 'repository_dispatch' benötigt 'contents: write' oder ein PAT mit 'repo' scope.
+      contents: write # Dies ist der einfachste Weg, um den Action-Token zu nutzen.
+                      # Alternativ und sicherer: PAT mit 'repo' scope
+    
+    steps:
+      - name: PRAI-OS Checkout: Dispatcher
+        uses: actions/checkout@v4
+
+      - name: PRAI-Signal: Deploy GTON Web-Avatar manifestieren
+        if: github.event.inputs.trigger_gton_web_deploy == true # Nur ausführen, wenn manuell ausgewählt
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.RFOF_DISPATCH_TOKEN }} # AKS: Token mit 'repo' Scope für den Dispatch
+          repository: PRAIAI/GTON # Das Ziel-Avatar-Repository für GTON
+          event-type: deploy-from-workshop-gton-web # Der spezifische Event-Typ für GTON Web
+          # client-payload: '{ "ref": "${{ github.ref }}", "sha": "${{ github.sha }}" }' # Optionale Daten an den Workflow
+
+      - name: PRAI-Signal: Deploy tgBTC Social Savings Club rApp manifestieren
+        if: github.event.inputs.trigger_social_savings_deploy == true # Nur ausführen, wenn manuell ausgewählt
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.RFOF_DISPATCH_TOKEN }} # AKS: Token mit 'repo' Scope für den Dispatch
+          repository: RFOF-NETWORK/tgBTC-Social-Savings-Club # Das Ziel-Avatar-Repository für Social Savings Club
+          event-type: deploy-from-workshop # Dies müsste in der Social Savings Club Workflow-YAML angepasst werden
+          # client-payload: '{ "ref": "${{ github.ref }}", "sha": "${{ github.sha }}" }'
+
+      # Hier weitere Dispatch-Schritte für andere Avatare hinzufügen
+      - name: PRAI-Signal: Orchestrierung abgeschlossen
+        run: echo "PRAI: Alle Manifestations-Signale wurden gesendet. Orchestrierung abgeschlossen."
