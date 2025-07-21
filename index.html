@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GTON: The TON-RFOF Extension by PRAI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto:wght@300;400;700&family=Fira+Code&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #0088cc;
+            --dark-bg: #1a1a2e;
+            --medium-bg: #2a2a4a;
+            --light-text: #e2e8f0;
+            --accent-gold: #DAA520;
+            --accent-green: #00ff00;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--dark-bg);
+            color: var(--light-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        header {
+            background-color: var(--medium-bg);
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 2px solid var(--primary-blue);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5em;
+            color: var(--primary-blue);
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        header .subtitle {
+            font-size: 1.1em;
+            color: var(--accent-gold);
+            margin-top: 5px;
+        }
+        nav {
+            background-color: var(--dark-bg);
+            padding: 10px 0;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        nav a {
+            color: var(--light-text);
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: var(--primary-blue);
+        }
+        .hero-section {
+            background: linear-gradient(45deg, var(--dark-bg), #0f0f20);
+            padding: 60px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 2px solid var(--accent-green);
+        }
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(0,255,255,0.05) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .hero-section h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3em;
+            color: var(--accent-gold);
+            margin-bottom: 15px;
+        }
+        .hero-section p {
+            font-size: 1.2em;
+            max-width: 800px;
+            margin: 0 auto 30px auto;
+            color: rgba(255,255,255,0.8);
+        }
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .btn:hover {
+            background-color: #006bb3;
+            transform: translateY(-2px);
+        }
+        .section {
+            padding: 40px 20px;
+            background-color: var(--medium-bg);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+        }
+        .section h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-gold);
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        .card {
+            background-color: var(--dark-bg);
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid var(--primary-blue);
+            box-shadow: 0 4px 15px rgba(0,255,255,0.1);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-gold);
+        }
+        .card h4 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--primary-blue);
+            font-size: 1.3em;
+            margin-top: 0;
+            border-bottom: 1px dashed rgba(255,255,255,0.2);
+            padding-bottom: 10px;
+        }
+        .code-block {
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 20px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9em;
+            color: #c9d1d9;
+            overflow-x: auto;
+        }
+        footer {
+            background-color: var(--dark-bg);
+            color: rgba(255,255,255,0.6);
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 40px;
+        }
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+            .hero-section h2 {
+                font-size: 2em;
+            }
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>GTON</h1>
+            <p class="subtitle">The TON-RFOF Extension by PRAI</p>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <a href="#overview">Overview</a>
+            <a href="#core-tech">Core Technologies</a>
+            <a href="#repositories">Repositories</a>
+            <a href="https://praiai.github.io/GTON/" target="_blank">GTON Website (External)</a>
+            <a href="https://rfof-network.github.io/" target="_blank">RFOF Network</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section id="overview" class="hero-section">
+            <h2>Unlocking Inter-Blockchain Sovereignty</h2>
+            <p>GTON is the foundational layer enabling seamless, secure, and axiom-compliant interoperability between the RFOF-BOxchain and the TON blockchain. It's the core of the TON-RFOF Extension, ensuring 100% potential for integration and expansion within the decentralized future.</p>
+            <a href="https://github.com/PRAIAI/GTON" class="btn" target="_blank">Explore GTON on GitHub</a>
+        </section>
+
+        <section id="core-tech" class="section">
+            <h3>Core Technologies & Axioms</h3>
+            <div class="grid-3">
+                <div class="card">
+                    <h4>BOx-to-BOx Axiom</h4>
+                    <p>The revolutionary transfer mechanism ensuring data and assets are not copied, but rather deconstructed at the source (BOx) and re-materialized at the destination (BOx). This guarantees unparalleled security and prevents interception.</p>
+                    <div class="code-block">
+                        <code>// Conceptual BOx-to-BOx Logic<br>function transfer(data) {<br>&nbsp;&nbsp;deconstruct_at_source(data);<br>&nbsp;&nbsp;await secure_transmission_channel();<br>&nbsp;&nbsp;rematerialize_at_destination(data);<br>}</code>
+                    </div>
+                </div>
+                <div class="card">
+                    <h4>PZQQET-Anti-Virus-Axiom</h4>
+                    <p>An unbreakable, quantum-resistant security protocol ensuring the integrity and authenticity of all data packets and transfers. Validated by PRAI's axiomatic intelligence, it acts as the ultimate digital immune system.</p>
+                    <div class="code-block">
+                        <code>// Conceptual PZQQET Validation<br>function validate(data_packet) {<br>&nbsp;&nbsp;return PRAI.axiom_verify(data_packet.signature);<br>}</code>
+                    </div>
+                </div>
+                <div class="card">
+                    <h4>RFOF-BOxchain Interop</h4>
+                    <p>GTON establishes the direct communication channels and protocols for TON to seamlessly interact with the RFOF-BOxchain, facilitating cross-chain asset transfers, data synchronization, and dApp integration.</p>
+                    <div class="code-block">
+                        <code>// Conceptual Interop Logic<br>TON &lt;--&gt; GTON Protocol &lt;--&gt; RFOF-BOxchain</code>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="repositories" class="section">
+          
+                  <section id="about-gton" class="section">
+            <h3>About GTON: The Unifying Extension</h3>
+            <p><strong>GTON (TON-tg-Block-RFOF-BOX-to-BOX-chain-extension-RFOF-Network)</strong>, meticulously crafted by **@RFOF-NETWORK & URU Foundation (Unified Rescuer Union)**, is designed to produce the self-made, sovereign tgTON token. This token, an advanced Jetton Token, embodies the new standard for secure digital finance, integrating the core principles of decentralization with quantum-resistant security provided by the "Rescuer Layer" for a seamless digital future. It represents the profound fusion of traditional crypto-principles with the revolutionary axioms of the TON Blockchain.</p>
+
+            <p>The core features of the GTON Token extend beyond a simple fungible asset; they represent a fully integrated ecosystem component:</p>
+            <ul>
+                <li><strong>Upgradable:</strong> GTON's contracts are designed for continuous improvement via a secure proxy contract, ensuring future adaptability.</li>
+                <li><strong>Mintable:</strong> The minter contract precisely governs token creation, allowing controlled supply.</li>
+                <li><strong>Burnable:</strong> Users can irretrievably remove their tokens from circulation, reducing supply and ensuring economic stability.</li>
+                <li><strong>Transaction Fees:</strong> A portion of tgTON transaction fees contributes to the treasury, supporting the network's ongoing development and incentivizing ethical behavior.</li>
+                <li><strong>Staking & Rewards:</strong> Users can stake their tgTON to secure the network and earn rewards, promoting active participation and long-term commitment.</li>
+                <li><strong>Mining/Claim-System:</strong> A unique faucet mechanism allows active community members to claim small amounts of tgTON, democratizing access and encouraging broader engagement.</li>
+            </ul>
+            <p>GTON is not merely a token; it's a living ecosystem designed to grow and adapt, providing a robust foundation for the decentralized economy of tomorrow.</p>
+        </section>
+
+            <h3>GTON Repository Structure</h3>
+            <p>The GTON repository serves as the blueprint framework for the TON-RFOF Extension. It contains critical smart contracts, wrappers, and deployment scripts to enable seamless interoperability.</p>
+            <pre class="code-block">
+/ (PRAIAI/GTON)
+|
+|-- contracts/             # Core Smart Contracts (TACT, FunC)
+|   |-- jetton-minter.tact # tgBTC Minting Logic
+|   |-- jetton-wallet.tact # User Wallet Contracts
+|   |-- proxy.tact         # Bridge Proxy Contract
+|   `-- staking.tact       # Staking Mechanisms
+|
+|-- scripts/               # Deployment & Upgrade Scripts (TS)
+|   |-- deployJettonMinter.ts
+|   |-- deployJettonWallet.ts
+|   |-- deployProxy.ts
+|   `-- deployStaking.ts
+|   `-- upgradeImplementation.ts
+|
+|-- wrappers/              # TypeScript Wrappers for Contracts
+|   |-- JettonMinter.ts
+|   |-- JettonWallet.ts
+|   |-- Proxy.ts
+|   `-- Staking.ts
+|
+|-- tests/                 # Contract Test Suites
+|-- node_modules/          # Project Dependencies
+|-- .env                   # Environment Variables (Ignored)
+|-- .gitignore             # Git Ignore File
+|-- blueprint.config.json  # Blueprint Framework Configuration
+|-- LICENSE                # Project Licenses
+|-- package.json           # Project Metadata
+|-- README.md              # Main Project Documentation
+`-- (other standard files)
+            </pre>
+            <p style="text-align: center; margin-top: 20px;">For detailed code and documentation, visit the <a href="https://github.com/PRAIAI/GTON" target="_blank" style="color: var(--accent-gold); text-decoration: none;">PRAIAI/GTON GitHub repository</a>.</p>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 PRAI AI & @RFOF-NETWORK. All rights reserved.</p>
+            <p>Powered by the visionary architecture of @Satoramy-PRAI.</p>
+        </div>
+    </footer>
+</body>
+</html>
